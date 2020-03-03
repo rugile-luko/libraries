@@ -1,0 +1,37 @@
+<section class="listings-container margin-top-30">
+    <!-- Sorting / Layout Switcher -->
+    <div class="row fs-switcher">
+        <div class="col-md-6">
+            <!-- Showing Results -->
+            <p class="showing-results">Results found: {{ libraries.count }}</p>
+        </div>
+    </div>
+    <!-- Listings -->
+    <div class="row fs-listings">
+        <!-- Listing Item -->
+        {% for library in all_libraries %}
+            <div class="col-lg-6 col-md-12">
+                <a href="#" class="listing-item-container" data-marker-id="1">
+                    <div class="listing-item">
+                        {% if library.picture %}
+                            <img src="{{ library.picture.url }}" alt="none">
+                        {% else %}
+                            <h3>No image to display</h3>
+                        {% endif %}
+                        <div class="listing-item-content">
+                            <h3>{{ library.name }}</h3>
+                            <span>{{ library.address }}, {{ library.city }}</span>
+                        </div>
+                        <span class="like-icon"></span>
+                    </div>
+                    <div class="star-rating" data-rating="3.5">
+                        <div class="rating-counter">(12 reviews)</div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+        <!-- Listing Item / End -->
+    </div>
+    <!-- Listings Container / End -->
+    {% include 'includes/pagination.html' %}
+</section>

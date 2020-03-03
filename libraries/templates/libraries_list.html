@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4&libraries=places&language=en">
+    </script>
+{% endblock %}
+
+{% block side_content %}
+    <a href="{% url 'add_library' %}" class="button border with-icon">Add Library</a>
+{% endblock %}
+
+{% block content %}
+    <div class="fs-container">
+        <div class="fs-inner-container content">
+            <div class="fs-content">
+                <!-- Search -->
+                <form method="get" class="form-row">
+                    <section class="search">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- Row With Forms -->
+                                <div class="row with-forms">
+                                    <!-- Main Search Input -->
+                                    <div class="col-fs-12">
+                                        <div class="input">
+                                            <input id="search-input" type="text" name="q"
+                                                   placeholder="Search for libraries"/>
+                                            <button type="submit" class="btn btn-secondary">Search</button>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Filters -->
+                                    <div class="col-fs-12">
+                                        <!-- Panel Dropdown -->
+                                        {#									<div class="panel-dropdown wide">#}
+                                        {#										<a href="#">More Filters</a>#}
+                                        {#										<div class="panel-dropdown-content checkboxes">#}
+                                        {##}
+                                        {#											<!-- Checkboxes -->#}
+                                        {#											<div class="row">#}
+                                        {#												<div class="col-md-6">#}
+                                        {#													<input id="check-a" type="checkbox" name="check">#}
+                                        {#													<label for="check-a">Elevator in building</label>#}
+                                        {##}
+                                        {#													<input id="check-b" type="checkbox" name="check">#}
+                                        {#													<label for="check-b">Friendly workspace</label>#}
+                                        {##}
+                                        {#													<input id="check-c" type="checkbox" name="check">#}
+                                        {#													<label for="check-c">Instant Book</label>#}
+                                        {##}
+                                        {#													<input id="check-d" type="checkbox" name="check">#}
+                                        {#													<label for="check-d">Wireless Internet</label>#}
+                                        {#												</div>#}
+                                        {##}
+                                        {#												<div class="col-md-6">#}
+                                        {#													<input id="check-e" type="checkbox" name="check" >#}
+                                        {#													<label for="check-e">Free parking on premises</label>#}
+                                        {##}
+                                        {#													<input id="check-f" type="checkbox" name="check" >#}
+                                        {#													<label for="check-f">Free parking on street</label>#}
+                                        {##}
+                                        {#													<input id="check-g" type="checkbox" name="check">#}
+                                        {#													<label for="check-g">Smoking allowed</label>#}
+                                        {##}
+                                        {#													<input id="check-h" type="checkbox" name="check">#}
+                                        {#													<label for="check-h">Events</label>#}
+                                        {#												</div>#}
+                                        {#											</div>#}
+                                        {##}
+                                        {#											<!-- Buttons -->#}
+                                        {#											<div class="panel-buttons">#}
+                                        {#												<button class="panel-cancel">Cancel</button>#}
+                                        {#												<button class="panel-apply">Apply</button>#}
+                                        {#											</div>#}
+                                        {##}
+                                        {#										</div>#}
+                                        {#									</div>#}
+                                        <!-- Panel Dropdown / End -->
+
+                                        <!-- Panel Dropdown -->
+                                        <div class="panel-dropdown">
+                                            <a href="#">Distance Radius</a>
+                                            <div class="panel-dropdown-content">
+                                                <input class="distance-radius" type="range" min="1" max="100" step="1"
+                                                       value="50" data-title="Radius around selected destination">
+                                                <div class="panel-buttons">
+                                                    <button class="panel-cancel">Disable</button>
+                                                    <button class="panel-apply">Apply</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Panel Dropdown / End -->
+                                    </div>
+                                    <!-- Filters / End -->
+                                </div>
+                                <!-- Row With Forms / End -->
+                            </div>
+                        </div>
+                    </section>
+                </form>
+
+                <!-- Search / End -->
+                {% include 'includes/libraries.html' %}
+            </div>
+        </div>
+        <div class="fs-inner-container map-fixed">
+
+            <!-- Map -->
+            <div id="map-container">
+                <div id="map" class="map-size"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var input = document.getElementById('search-input');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    </script>
+    <script type="text/javascript">
+
+        function initMap() {
+            let lisbon = {lat: 38.727537, lng: -9.138920};
+            let map = new google.maps.Map(document.getElementById('map'), {
+                center: lisbon,
+                zoom: 13,
+            });
+
+            {#let locations = [#}
+            {#    [38.75787, -9.14678],#}
+            {#    [38.73526, -9.15098],#}
+            {#    [38.73999, -9.13999]#}
+            {#];#}
+
+            let locations = {{ json_data|safe }}
+            let marker, i;
+
+            for (i = 0; i < locations.length; i++) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+                    map: map,
+                    {#title: locations[i]['name']#}
+                });
+            }
+        }
+
+        initMap()
+    </script>
+{% endblock %}

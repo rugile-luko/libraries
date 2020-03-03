@@ -1,0 +1,62 @@
+{% if all_libraries.has_other_pages %}
+    <div class="row fs-listings">
+        <div class="col-md-12">
+
+            <!-- Pagination -->
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Pagination -->
+                    <div class="pagination-container margin-top-15 margin-bottom-40">
+                        <nav class="pagination">
+                            <ul>
+                                {% if all_libraries.has_previous %}
+                                    <li><a class="page-link" href="?page={{ all_libraries.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Previous</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in all_libraries.paginator.page_range %}
+                                    {% if all_libraries.number == page_num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">
+                                            {{ page_num }}
+                                            <span class="sr-only">(current)</span>
+                                            </span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if all_libraries.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ all_libraries.next_page_number }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Next</span>
+                                    </li>
+                                {% endif %}
+
+                                {#                                <li><a href="#" class="current-page">1</a></li>#}
+                                {#                                <li><a href="#">2</a></li>#}
+                                {#                                <li><a href="#">3</a></li>#}
+                                {#                                <li><a href="#"><i class="sl sl-icon-arrow-right"></i></a></li>#}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <!-- Pagination / End -->
+
+        </div>
+    </div>
+{% endif %}
+<!-- Pagination Container / End -->
