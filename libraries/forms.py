@@ -10,12 +10,10 @@ class LibraryForm(forms.ModelForm):
 
     class Meta:
         model = models.Library
-        exclude = ['review', 'date_created']
+        exclude = ['review', 'date_created', 'latitude', 'longitude']
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'What is the name of the library?'}),
             'description': forms.Textarea(attrs={'rows': '5', 'placeholder': 'Tell us something about the library!'}),
-            'latitude': forms.HiddenInput(),
-            'longitude': forms.HiddenInput()
         }
 
         labels = {

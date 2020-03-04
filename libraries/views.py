@@ -3,6 +3,7 @@ from . import models, forms
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 import simplejson
+import requests
 
 
 def libraries_list(request):
@@ -12,8 +13,26 @@ def libraries_list(request):
     json_data = simplejson.dumps(list(data))
 
     if query:
-        lookups = Q(address__contains=query)
-        libraries = models.Library.objects.filter(lookups).order_by('-date_created')
+        api_key = "AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4"
+        api_response = requests.get(
+            'https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(query, api_key))
+        api_response_dict = api_response.json()
+        if api_response_dict['status'] == 'OK':
+            latitude = api_response_dict['results'][0]['geometry']['location']['lat']
+            longitude = api_response_dict['results'][0]['geometry']['location']['lng']
+            print(latitude, longitude)
+
+        libraries = []
+        json_data = []
+        for library in models.Library.objects.all():
+            if library.measure_distance(longitude, latitude) < 100:
+                libraries.append(library)
+                json_data.append([
+                    library.latitude,
+                    library.longitude
+                ])
+
+        json_data = simplejson.dumps(json_data)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(libraries, 8)

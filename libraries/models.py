@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 import requests
+from math import radians, cos, sin, asin, sqrt
 
 
 class Library(models.Model):
@@ -47,6 +48,18 @@ class Library(models.Model):
             print(self.latitude, self.longitude)
 
         super().save(**kwargs)
+
+    def measure_distance(self, lon1, lat1):
+        # convert decimal degrees to radians
+        lon1, lat1, lon2, lat2 = map(radians, [self.longitude, self.latitude, lon1, lat1])
+        # haversine formula
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+        c = 2 * asin(sqrt(a))
+        # Radius of earth in kilometers is 6371
+        km = 6371 * c
+        return km
 
     @property
     def picture_url(self):
