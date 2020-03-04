@@ -1,7 +1,6 @@
 from django import forms
 from . import models
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
 
 
 class LibraryForm(forms.ModelForm):
@@ -15,6 +14,8 @@ class LibraryForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'What is the name of the library?'}),
             'description': forms.Textarea(attrs={'rows': '5', 'placeholder': 'Tell us something about the library!'}),
+            'latitude': forms.HiddenInput(),
+            'longitude': forms.HiddenInput()
         }
 
         labels = {

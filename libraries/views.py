@@ -8,7 +8,7 @@ import simplejson
 def libraries_list(request):
     libraries = models.Library.objects.all().order_by('-date_created')
     query = request.GET.get('q')
-    data = models.Location.objects.values_list('latitude', 'longitude')
+    data = models.Library.objects.values_list('latitude', 'longitude')
     json_data = simplejson.dumps(list(data))
 
     if query:
