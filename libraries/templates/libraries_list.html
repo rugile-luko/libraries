@@ -23,78 +23,15 @@
                                 <!-- Row With Forms -->
                                 <div class="row with-forms">
                                     <!-- Main Search Input -->
-                                    <div class="col-fs-12">
+                                    <div class="col-md-10">
                                         <div class="input">
                                             <input id="search-input" type="text" name="q"
                                                    placeholder="Search for libraries"/>
-                                            <button type="submit" class="btn btn-secondary">Search</button>
                                         </div>
                                     </div>
-
-
-                                    <!-- Filters -->
-                                    <div class="col-fs-12">
-                                        <!-- Panel Dropdown -->
-                                        {#									<div class="panel-dropdown wide">#}
-                                        {#										<a href="#">More Filters</a>#}
-                                        {#										<div class="panel-dropdown-content checkboxes">#}
-                                        {##}
-                                        {#											<!-- Checkboxes -->#}
-                                        {#											<div class="row">#}
-                                        {#												<div class="col-md-6">#}
-                                        {#													<input id="check-a" type="checkbox" name="check">#}
-                                        {#													<label for="check-a">Elevator in building</label>#}
-                                        {##}
-                                        {#													<input id="check-b" type="checkbox" name="check">#}
-                                        {#													<label for="check-b">Friendly workspace</label>#}
-                                        {##}
-                                        {#													<input id="check-c" type="checkbox" name="check">#}
-                                        {#													<label for="check-c">Instant Book</label>#}
-                                        {##}
-                                        {#													<input id="check-d" type="checkbox" name="check">#}
-                                        {#													<label for="check-d">Wireless Internet</label>#}
-                                        {#												</div>#}
-                                        {##}
-                                        {#												<div class="col-md-6">#}
-                                        {#													<input id="check-e" type="checkbox" name="check" >#}
-                                        {#													<label for="check-e">Free parking on premises</label>#}
-                                        {##}
-                                        {#													<input id="check-f" type="checkbox" name="check" >#}
-                                        {#													<label for="check-f">Free parking on street</label>#}
-                                        {##}
-                                        {#													<input id="check-g" type="checkbox" name="check">#}
-                                        {#													<label for="check-g">Smoking allowed</label>#}
-                                        {##}
-                                        {#													<input id="check-h" type="checkbox" name="check">#}
-                                        {#													<label for="check-h">Events</label>#}
-                                        {#												</div>#}
-                                        {#											</div>#}
-                                        {##}
-                                        {#											<!-- Buttons -->#}
-                                        {#											<div class="panel-buttons">#}
-                                        {#												<button class="panel-cancel">Cancel</button>#}
-                                        {#												<button class="panel-apply">Apply</button>#}
-                                        {#											</div>#}
-                                        {##}
-                                        {#										</div>#}
-                                        {#									</div>#}
-                                        <!-- Panel Dropdown / End -->
-
-                                        <!-- Panel Dropdown -->
-                                        <div class="panel-dropdown">
-                                            <a href="#">Distance Radius</a>
-                                            <div class="panel-dropdown-content">
-                                                <input class="distance-radius" type="range" min="1" max="100" step="1"
-                                                       value="50" data-title="Radius around selected destination">
-                                                <div class="panel-buttons">
-                                                    <button class="panel-cancel">Disable</button>
-                                                    <button class="panel-apply">Apply</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Panel Dropdown / End -->
+                                    <div class="col-md-2">
+                                        <button type="submit" class="button border with-icon">Search</button>
                                     </div>
-                                    <!-- Filters / End -->
                                 </div>
                                 <!-- Row With Forms / End -->
                             </div>
@@ -121,26 +58,35 @@
     <script type="text/javascript">
 
         function initMap() {
-            let lisbon = {lat: 38.727537, lng: -9.138920};
-            let map = new google.maps.Map(document.getElementById('map'), {
-                center: lisbon,
-                zoom: 13,
+            let map;
+            {#let lisbon = {lat: 38.727537, lng: -9.138920};#}
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 38.727527, lng: -9.138920},
+                zoom: 11
             });
+            {% if query %}
+                map.setCenter(new google.maps.LatLng({lat: {{ query_latitude }}, lng: {{ query_longitude }}}));
+                map.setZoom(11);
+            {% else %}
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        map.setCenter(initialLocation);
+                        map.setZoom(14);
+                    }, function (positionError) {
+                        map.setCenter(new google.maps.LatLng(38.727537, -9.138920));
+                        map.setZoom(14);
+                    });
+                }
+            {% endif %}
 
-            {#let locations = [#}
-            {#    [38.75787, -9.14678],#}
-            {#    [38.73526, -9.15098],#}
-            {#    [38.73999, -9.13999]#}
-            {#];#}
-
-            let locations = {{ json_data|safe }}
+            let locations = {{ json_data|safe }};
             let marker, i;
 
             for (i = 0; i < locations.length; i++) {
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(locations[i][0], locations[i][1]),
                     map: map,
-                    {#title: locations[i]['name']#}
                 });
             }
         }

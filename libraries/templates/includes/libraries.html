@@ -3,7 +3,7 @@
     <div class="row fs-switcher">
         <div class="col-md-6">
             <!-- Showing Results -->
-            <p class="showing-results">Results found: {{ libraries.count }}</p>
+            <p class="showing-results">Results found: {{ count_libraries }}</p>
         </div>
     </div>
     <!-- Listings -->
@@ -11,7 +11,7 @@
         <!-- Listing Item -->
         {% for library in all_libraries %}
             <div class="col-lg-6 col-md-12">
-                <a href="#" class="listing-item-container" data-marker-id="1">
+                <a href="{% url 'detail_view' pk=library.pk %}" class="listing-item-container" data-marker-id="1">
                     <div class="listing-item">
                         {% if library.picture %}
                             <img src="{{ library.picture.url }}" alt="none">

@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('libraries/', views.libraries_list, name="libraries_list"),
     path('libraries/add/', views.add_library, name='add_library'),
+    path('libraries/library/<pk>', views.detail_view, name='detail_view')
 ]
 
 if settings.DEBUG:
