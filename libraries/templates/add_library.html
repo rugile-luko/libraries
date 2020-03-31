@@ -3,7 +3,7 @@
 
 {% block head %}
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4&libraries=places&language=en">
+            src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&language=en">
     </script>
 {% endblock %}
 
@@ -20,6 +20,14 @@
             <div class="col-lg-12">
                 <form method="post" novalidate enctype="multipart/form-data">
                     {% csrf_token %}
+                    <br/>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="notification error closeable">
+                                <p>{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <div id="add-listing" class="separated-form">
                         <!-- Section -->
                         <div class="add-listing-section">
@@ -31,14 +39,12 @@
                             <div class="row with-forms">
                                 <div class="col-md-12">
                                     {{ form.name|as_crispy_field }}
-                                    {#								<h5>Listing Title <i class="tip" data-tip-content="Name of your business"></i></h5>#}
-                                    {#								<input class="search-field" type="text" value=""/>#}
                                 </div>
                             </div>
                             <!-- Row -->
                             <div class="row with-forms">
                                 <div class="col-md-12">
-                                    <h5>{{ form.address|as_crispy_field }}</h5>
+                                    {{ form.address|as_crispy_field }}
                                 </div>
                             </div>
                             <!-- Row / End -->
@@ -50,7 +56,7 @@
                                 <h3>Image</h3>
                             </div>
                             <div class="form">
-                                <h3>{{ form.picture|as_crispy_field }}</h3>
+                                {{ form.picture|as_crispy_field }}
                             </div>
                         </div>
                         <!-- Section / End -->
@@ -63,59 +69,27 @@
                             </div>
                             <!-- Description -->
                             <div class="form">
-                                <h5>{{ form.description|as_crispy_field }}</h5>
+                                {{ form.description|as_crispy_field }}
                             </div>
                             <!-- Row -->
                             <div class="row with-forms">
                                 <!-- Phone -->
                                 <div class="col-md-3">
-                                    <h5>{{ form.phone|as_crispy_field }}</h5>
+                                    {{ form.phone|as_crispy_field }}
                                 </div>
                                 <!-- Fax -->
                                 <div class="col-md-3">
-                                    <h5>{{ form.fax|as_crispy_field }}</h5>
+                                    {{ form.fax|as_crispy_field }}
                                 </div>
                                 <!-- Website -->
                                 <div class="col-md-3">
-                                    <h5>{{ form.website|as_crispy_field }}</h5>
+                                    {{ form.website|as_crispy_field }}
                                 </div>
                                 <!-- Email -->
                                 <div class="col-md-3">
-                                    <h5>{{ form.email|as_crispy_field }}</h5>
+                                    {{ form.email|as_crispy_field }}
                                 </div>
                             </div>
-                            <!-- Row / End -->
-
-                            <!-- Checkboxes -->
-                            {#						<h5 class="margin-top-30 margin-bottom-10">Amenities <span>(optional)</span></h5>#}
-                            {#						<div class="checkboxes in-row margin-bottom-20">#}
-                            {##}
-                            {#							<input id="check-a" type="checkbox" name="check">#}
-                            {#							<label for="check-a">Elevator in building</label>#}
-                            {##}
-                            {#							<input id="check-b" type="checkbox" name="check">#}
-                            {#							<label for="check-b">Friendly workspace</label>#}
-                            {##}
-                            {#							<input id="check-c" type="checkbox" name="check">#}
-                            {#							<label for="check-c">Instant Book</label>#}
-                            {##}
-                            {#							<input id="check-d" type="checkbox" name="check">#}
-                            {#							<label for="check-d">Wireless Internet</label>#}
-                            {##}
-                            {#							<input id="check-e" type="checkbox" name="check" >#}
-                            {#							<label for="check-e">Free parking on premises</label>#}
-                            {##}
-                            {#							<input id="check-f" type="checkbox" name="check" >#}
-                            {#							<label for="check-f">Free parking on street</label>#}
-                            {##}
-                            {#							<input id="check-g" type="checkbox" name="check">#}
-                            {#							<label for="check-g">Smoking allowed</label>#}
-                            {##}
-                            {#							<input id="check-h" type="checkbox" name="check">#}
-                            {#							<label for="check-h">Events</label>#}
-                            {##}
-                            {#						</div>#}
-                            <!-- Checkboxes / End -->
                         </div>
                         <!-- Section / End -->
 
@@ -144,6 +118,9 @@
         </div>
     </div>
     <br/>
+{% endblock %}
+
+{% block js %}
     <script>
         var input = document.getElementById('id_address');
         var autocomplete = new google.maps.places.Autocomplete(input);

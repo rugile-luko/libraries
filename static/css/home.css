@@ -1,0 +1,10 @@
+#bg {
+    height: 100vh !important;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-attachment: fixed;
+}
+
+#homeText {
+    margin-left: 1rem;
+}

@@ -3,12 +3,8 @@
 
 {% block head %}
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4&libraries=places&language=en">
+            src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&language=en">
     </script>
-{% endblock %}
-
-{% block side_content %}
-    <a href="{% url 'add_library' %}" class="button border with-icon">Add Library</a>
 {% endblock %}
 
 {% block content %}
@@ -26,7 +22,7 @@
                                     <div class="col-md-10">
                                         <div class="input">
                                             <input id="search-input" type="text" name="q"
-                                                   placeholder="Search for libraries"/>
+                                                   placeholder="Search for libraries" value="{{ request.GET.q }}"/>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -51,6 +47,8 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js %}
     <script type="text/javascript">
         var input = document.getElementById('search-input');
         var autocomplete = new google.maps.places.Autocomplete(input);
@@ -59,14 +57,13 @@
 
         function initMap() {
             let map;
-            {#let lisbon = {lat: 38.727537, lng: -9.138920};#}
             map = new google.maps.Map(document.getElementById('map'), {
-                center: {lat: 38.727527, lng: -9.138920},
-                zoom: 11
+                center: {lat: 54.685876, lng: 25.286903},
+                zoom: 14
             });
             {% if query %}
                 map.setCenter(new google.maps.LatLng({lat: {{ query_latitude }}, lng: {{ query_longitude }}}));
-                map.setZoom(11);
+                map.setZoom(14);
             {% else %}
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function (position) {
@@ -74,7 +71,7 @@
                         map.setCenter(initialLocation);
                         map.setZoom(14);
                     }, function (positionError) {
-                        map.setCenter(new google.maps.LatLng(38.727537, -9.138920));
+                        map.setCenter(new google.maps.LatLng(54.685876, 25.286903));
                         map.setZoom(14);
                     });
                 }

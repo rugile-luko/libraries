@@ -3,12 +3,8 @@
 
 {% block head %}
     <script type="text/javascript"
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4&libraries=places&language=en">
+            src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&language=en">
     </script>
-{% endblock %}
-
-{% block side_content %}
-    <a href="{% url 'add_library' %}" class="button border with-icon">Add Library</a>
 {% endblock %}
 
 {% block content %}
@@ -47,20 +43,6 @@
                         </div>
                     {% endif %}
 
-                    <!-- Slider -->
-                    {% if library.picture %}
-                        <div id="listing-gallery" class="listing-section">
-                            <h3 class="listing-desc-headline margin-top-70">Gallery</h3>
-                            <div class="listing-slider-small mfp-gallery-container margin-bottom-0">
-                                <img src="{{ library.picture.url }}" alt="none">
-                                {#                            <a href="images/single-listing-02a.jpg"#}
-                                {#                               data-background-image="images/single-listing-02a.jpg" class="item mfp-gallery"#}
-                                {#                               title="Title 2"></a>#}
-                            </div>
-                        </div>
-                    {% endif %}
-
-
                     <!-- Location -->
                     <div id="listing-location" class="listing-section">
                         <h3 class="listing-desc-headline margin-top-60 margin-bottom-30">Location</h3>
@@ -69,6 +51,16 @@
                             <div id="singleListingMap"></div>
                         </div>
                     </div>
+
+                    <!-- Slider -->
+                    {% if library.picture %}
+                        <div id="listing-gallery" class="listing-section">
+                            <h3 class="listing-desc-headline margin-top-70">Gallery</h3>
+                            <div class="listing-slider-small mfp-gallery-container margin-bottom-0">
+                                <img src="{{ library.picture.url }}" alt="none">
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
 
                 <!-- Sidebar
@@ -89,33 +81,28 @@
                         </ul>
                     </div>
 
-                    <!-- Share / Like -->
                     {% if library.website %}
                         <div class="listing-share margin-top-40 margin-bottom-40 no-border">
                             <a href="{{ library.website }}" target="_blank">
                                 <button class="button">Open website!</button>
                             </a>
-
-                            <!-- Share Buttons -->
                             <div class="clearfix"></div>
                         </div>
-
                         </div>
                     {% endif %}
                 <!-- Sidebar / End -->
             </div>
         </div>
-
-
         <!-- Footer
         ================================================== -->
         <div id="footer" class="margin-top-15"></div>
     </div>
-    <script type="text/javascript">
+{% endblock %}
 
+{% block js %}
+    <script type="text/javascript">
         function initMap() {
             let map;
-            {#let lisbon = {lat: 38.727537, lng: -9.138920};#}
             map = new google.maps.Map(document.getElementById('singleListingMap'), {
                 center: {lat: {{ library.latitude }}, lng: {{ library.longitude }}},
                 zoom: 13

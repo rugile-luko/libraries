@@ -1,8 +1,15 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from . import models, forms
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 import simplejson
 import requests
+from django.contrib import messages
+
+
+def home(request):
+    api_key = settings.MAPS_API_KEY
+    return render(request, "home.html", context={"api_key": api_key})
 
 
 def libraries_list(request):
@@ -12,18 +19,16 @@ def libraries_list(request):
     json_data = simplejson.dumps(list(data))
     query_latitude = None
     query_longitude = None
-    search_radius = request.GET.get('radius_around_selected_destination')
     count_libraries = libraries.count()
+    api_key = settings.MAPS_API_KEY
 
     if query:
-        api_key = "AIzaSyDHmd_dI3EZ7JwL6xSHYGJnsFMZe5zBYW4"
         api_response = requests.get(
             'https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(query, api_key))
         api_response_dict = api_response.json()
         if api_response_dict['status'] == 'OK':
             latitude = api_response_dict['results'][0]['geometry']['location']['lat']
             longitude = api_response_dict['results'][0]['geometry']['location']['lng']
-            print(latitude, longitude)
 
         query_latitude = api_response_dict['results'][0]['geometry']['location']['lat']
         query_longitude = api_response_dict['results'][0]['geometry']['location']['lng']
@@ -31,7 +36,7 @@ def libraries_list(request):
         libraries = []
         json_data = []
         for library in models.Library.objects.all():
-            if library.measure_distance(longitude, latitude) < float(search_radius):
+            if library.measure_distance(longitude, latitude) < 20:
                 libraries.append(library)
                 json_data.append([
                     library.latitude,
@@ -53,8 +58,8 @@ def libraries_list(request):
 
     context = {
         "query": query,
-        "search_radius": search_radius,
         "libraries": libraries,
+        "api_key": api_key,
         'all_libraries': all_libraries,
         'json_data': json_data,
         'query_latitude': query_latitude,
@@ -66,29 +71,34 @@ def libraries_list(request):
 
 
 def add_library(request):
+    api_key = settings.MAPS_API_KEY
     if request.method == 'POST':
         form = forms.LibraryForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Library added successfully!')
             return redirect('libraries_list')
         else:
-            print(form.errors)
+            messages.error(request, "Something went wrong. Please check if you haven't missed any required fields.")
 
     else:
         form = forms.LibraryForm()
 
     context = {
-        "form": form
+        "form": form,
+        "api_key": api_key
     }
 
     return render(request, "add_library.html", context)
 
 
 def detail_view(request, pk):
+    api_key = settings.MAPS_API_KEY
     library = get_object_or_404(models.Library, pk=pk)
 
     context = {
-        "library": library
+        "library": library,
+        "api_key": api_key
     }
 
     return render(request, 'detail_view.html', context)

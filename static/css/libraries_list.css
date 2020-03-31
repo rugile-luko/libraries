@@ -2,3 +2,13 @@
     height: 500px;
     width: 100px;
 }
+
+input[type=file] {
+    line-height: 0px !important;
+    padding-top: 12px !important;
+    padding-bottom: 20px !important;
+}
+
+.help-inline {
+    color: #f91942;
+}

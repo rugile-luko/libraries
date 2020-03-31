@@ -1,0 +1,38 @@
+<header id="header-container" class="fixed fullwidth">
+
+	<!-- Header -->
+	<div id="header" class="not-sticky">
+		<div class="container">
+
+			<!-- Left Side Content -->
+			<div class="left-side">
+
+				<!-- Mobile Navigation -->
+				<div class="mmenu-trigger">
+					<button class="hamburger hamburger--collapse" type="button">
+						<span class="hamburger-box">
+							<span class="hamburger-inner"></span>
+						</span>
+					</button>
+				</div>
+
+				<!-- Main Navigation -->
+                <nav id="navigation" class="style-1">
+                        <ul id="responsive">
+                            <li><a {% if request.resolver_match.url_name == "home" %}class="current"{% endif %} href="{% url 'home' %}">Home</a></li>
+                            <li><a {% if request.resolver_match.url_name == "libraries_list" %}class="current"{% endif %} href="{% url 'libraries_list' %}">List of Libraries</a></li>
+                        </ul>
+                    </nav>
+                    <div class="clearfix"></div>
+				<!-- Main Navigation / End -->
+			</div>
+			<div class="right-side">
+				<div class="header-widget">
+					<a href="{% url 'add_library' %}" class="button border with-icon">Add Library</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Header / End -->
+</header>
+<div class="clearfix"></div>
